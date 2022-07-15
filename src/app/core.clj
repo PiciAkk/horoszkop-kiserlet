@@ -13,7 +13,7 @@
    "január,február,március,április,május,június,július,augusztus,szeptember,október,november,december"
    #","))
 
-(defn horoszkop-formazasa
+(defn formazas
   "horoszkopok formaza egy kis Java-s magic-kel:tm:"
   [string]
   (-> (java.text.Normalizer/normalize string java.text.Normalizer$Form/NFD)
@@ -24,9 +24,9 @@
   "horoszkopos szoveg lekerese az astronet.hu-rol"
   [csillagjegy & [datum]]
   (let [url (str "https://www.astronet.hu/horoszkop/"
-                 (horoszkop-formazasa csillagjegy)
+                 (formazas csillagjegy)
                  "-napi-horoszkop/"
-                 ((fnil horoszkop-formazasa "") datum))
+                 ((fnil formazas "") datum))
         
         html (:body (client/get url))
 
