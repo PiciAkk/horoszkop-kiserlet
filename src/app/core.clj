@@ -20,24 +20,27 @@
       (clojure.string/replace #"\p{InCombiningDiacriticalMarks}+" "")
       (s/lower-case)))
 
-(defn horoszkop-lekerese
+(def horoszkop-lekerese
   "horoszkopos szoveg lekerese az astronet.hu-rol"
-  [csillagjegy & [datum]]
-  (let [url (str "https://www.astronet.hu/horoszkop/"
-                 (formazas csillagjegy)
-                 "-napi-horoszkop/"
-                 ((fnil formazas "") datum))
-        
-        html (:body (client/get url))
+  (memoize
+   (fn [csillagjegy & [datum]]
+     (let [url (str "https://www.astronet.hu/horoszkop/"
+                    (formazas csillagjegy)
+                    "-napi-horoszkop/"
+                    ((fnil formazas "") datum))
 
-        start (+ (s/index-of html "details-content") 
-                 17)
-        
-        end (+ (s/index-of (apply str (drop start html)) "</div>") 
-               start)]
+           html (:body (client/get url))
 
-    ((comp s/trim s/trim-newline) 
-     (subs html start end))))
+           start (+ (s/index-of html "details-content")
+                    17)
+
+           end (+ (s/index-of (apply str (drop start html)) "</div>")
+                  start)]
+
+       ((comp s/trim s/trim-newline)
+        (subs html start end))))))
+
+
 
 (defn random-horoszkop
   "random horoszkop generalasa"
@@ -55,9 +58,10 @@
                         (s/join "-" [ev honap nap]))))
 
 (defn csillagjegyek-lecserelese
+  "minden csillagjegy lecserélése egy megadott csillagjegyre egy szovegben"
   [erre szoveg]
   (s/replace szoveg
-             (re-pattern 
+             (re-pattern
               (str "("
                    (s/join "|" (map s/capitalize csillagjegyek))
                    ")"))
@@ -70,7 +74,22 @@
 
         szovegek (shuffle (conj (map (partial csillagjegyek-lecserelese csillagjegy)
                                      (repeatedly 4 random-horoszkop))
-                                (horoszkop-lekerese csillagjegy)))]
+                                (horoszkop-lekerese csillagjegy)))
 
-    (dotimes [x (count szovegek)]
-      (println (str (inc x) ". " (nth szovegek x) "\n")))))
+        tipp (do (dotimes [x (count szovegek)]
+                   (println (str (inc x) ". " (nth szovegek x) "\n")))
+                 (println "a fentiek közül melyik írja le legjobban a napodat?")
+                 (-> (read-line)
+                     (s/replace #"\." "")
+                     (Integer/parseInt)))
+
+        tenyleges (->> (horoszkop-lekerese csillagjegy)
+                       (.indexOf szovegek)
+                       (inc))]
+    
+    (println (str "\n"
+                  "a napodat legjobban leíró horoszkóp: " tipp "\n"
+                  "mai horoszkópod: " tenyleges "\n"
+                  (if (= tipp tenyleges)
+                    "egyezik!"
+                    "nem egyezik!")))))
