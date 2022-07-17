@@ -46,11 +46,11 @@
   "random horoszkop generalasa"
   []
   (let [evek (range 2015 2022)
-
-        napok (as-> (java.time.LocalDateTime/now) $
-                (.getDayOfMonth $)
-                (range (- $ 4)
-                       29))
+        
+        napok (map (fn [nap]
+                     (-> (format "%2s" (str nap))
+                         (s/replace #" " "0")))
+                   (range 1 29))
 
         [ev honap nap csillagjegy] (map rand-nth
                                         [evek honapok napok csillagjegyek])]
@@ -77,7 +77,7 @@
                                 (horoszkop-lekerese csillagjegy)))
 
         tipp (do (dotimes [x (count szovegek)]
-                   (println (str (inc x) ". " (nth szovegek x) "\n")))
+                   (println (str (inc x) ". " (nth szovegek x) "\n"))) 
                  (println "a fentiek közül melyik írja le legjobban a napodat?")
                  (-> (read-line)
                      (s/replace #"\." "")
