@@ -9,4 +9,5 @@
                  [ring/ring-core "1.7.1"]
                  [ring/ring-jetty-adapter "1.7.1"]]
   :repl-options {:init-ns app.core}
-  :main app.core)
+  :main app.core
+  :aot [app.core])
