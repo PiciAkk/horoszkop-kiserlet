@@ -1,4 +1,4 @@
-const backendURL: string = "http://localhost:3000";
+const backendURL: string = "http://minecraft.veddvelem.hu:3000";
 
 interface Horoszkop {
     horoszkop: string;
