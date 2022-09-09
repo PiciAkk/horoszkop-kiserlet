@@ -4,6 +4,8 @@
             [clojure.data.json :as json]
             [clojure.java.io :as io]
             [ring.adapter.jetty :refer [run-jetty]]
+            [ring.middleware.file :refer [wrap-file]]
+            [compojure.core :refer [GET routes]]
             #_[ring.util.response :as response])
   (:gen-class :main true))
 
@@ -24,7 +26,7 @@
   "horoszkopok formazasa egy kis Java-s magic-kel:tm:"
   [string]
   (-> (java.text.Normalizer/normalize string java.text.Normalizer$Form/NFD)
-      (clojure.string/replace #"\p{InCombiningDiacriticalMarks}+" "")
+      (s/replace #"\p{InCombiningDiacriticalMarks}+" "")
       (s/lower-case)))
 
 (defn horoszkop-lekerese
@@ -144,20 +146,18 @@
 
 (defn -main []
   (run-jetty
-   (fn [{uri :uri query :query-string}]
-     {:status 200
-      :headers {"Content-Type" "text/plain"
-                "Access-Control-Allow-Origin" "*"}
-      :body (json/write-str
-             (case uri
-               "/csillagjegyek" csillagjegyek
-               "/horoszkopok-generalasa" (horoszkopok-generalasa
-                                          (.getPath
-                                           (java.net.URI.
-                                            (second
-                                             (s/split query #"=")))))
-               "clojure ftw!"))})
-   {:port 3000}))
+   (wrap-file
+    (routes
+     (GET "/csillagjegyek" []
+       (json/write-str csillagjegyek))
+
+     (GET "/horoszkopok-generalasa/:csillagjegy" [csillagjegy] 
+       (json/write-str (horoszkopok-generalasa csillagjegy))))
+    
+    (str (System/getProperty "user.dir") "/resources/public/"))
+   
+   {:port 3000
+    :join? false}))
 
 ;; (slurp (io/resource "statistics.json"))
 ;; {:legjobban-leiro (osszegzes tipp szovegek)

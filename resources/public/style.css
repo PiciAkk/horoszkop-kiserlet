@@ -1,0 +1,8 @@
+.horoszkopok {
+    display: table; 
+    max-width: 700px;
+}
+
+.lehetosegek {
+    visibility: hidden;
+}

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>horoszkópkísérlet</title>
+    <script src="app.js" defer></script>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <meta charset="UTF-8">
+</head>
+
+<body>
+    <center>
+        <h1>horoszkópkísérlet</h1>
+
+        <label for="csillagjegyek">csillagjegyed:</label>
+        <select name="csillagjegyek" id="csillagjegyek"></select>
+        <br><br>
+
+        <button id="horoszkopok-generalasa">horoszkópok generálása</button>
+        <br><br>
+
+        <b id="lehetoseg-hint" style="visibility: hidden;">válaszd ki a napodra legjobban illő napi horoszkópot az
+            alábbi gombok segítségével!</b>
+        <br><br>
+
+        <button id="lehetoseg1" class="lehetosegek">1</button>
+        <button id="lehetoseg2" class="lehetosegek">2</button>
+        <button id="lehetoseg3" class="lehetosegek">3</button>
+        <button id="lehetoseg4" class="lehetosegek">4</button>
+        <button id="lehetoseg5" class="lehetosegek">5</button>
+
+        <blockquote id="horoszkop1" class="horoszkopok"></blockquote>
+        <blockquote id="horoszkop2" class="horoszkopok"></blockquote>
+        <blockquote id="horoszkop3" class="horoszkopok"></blockquote>
+        <blockquote id="horoszkop4" class="horoszkopok"></blockquote>
+        <blockquote id="horoszkop5" class="horoszkopok"></blockquote>
+    </center>
+</body>
+
+</html>
