@@ -4,7 +4,7 @@
             [clojure.data.json :as json]
             [clojure.java.io :as io]
             [ring.adapter.jetty :refer [run-jetty]]
-            [ring.middleware.file :refer [wrap-file]]
+            [ring.middleware.resource :refer [wrap-resource]]
             [compojure.core :refer [GET routes]]
             #_[ring.util.response :as response])
   (:gen-class :main true))
@@ -146,15 +146,15 @@
 
 (defn -main []
   (run-jetty
-   (wrap-file
+   (wrap-resource
     (routes
      (GET "/csillagjegyek" []
        (json/write-str csillagjegyek))
 
-     (GET "/horoszkopok-generalasa/:csillagjegy" [csillagjegy] 
+     (GET "/horoszkopok-generalasa/:csillagjegy" [csillagjegy]
        (json/write-str (horoszkopok-generalasa csillagjegy))))
-    
-    (str (System/getProperty "user.dir") "/resources/public/"))
+     
+    "public")
    
    {:port 3000
     :join? false}))

@@ -1,4 +1,4 @@
-(defproject app "0.4.0-SNAPSHOT"
+(defproject app "0.5.0-SNAPSHOT"
   :description "egy horoszkópos játék, ami később az astronet.hu-s szövegek igazságtartalmát is fel tudja majd mérni"
   :url "https://github.com/PiciAkk/horoszkop-kiserlet"
   :license {:name "MIT"
