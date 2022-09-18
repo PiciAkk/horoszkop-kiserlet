@@ -8,7 +8,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-const backendURL = "http://localhost:3000";
+const backendURL = "http://minecraft.veddvelem.hu:3000";
 (() => __awaiter(void 0, void 0, void 0, function* () {
     const csillagjegyek = yield (yield fetch(`${backendURL}/csillagjegyek`)).json();
     document.getElementById("csillagjegyek").innerHTML =
