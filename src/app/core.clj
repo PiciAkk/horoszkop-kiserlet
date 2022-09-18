@@ -1,15 +1,12 @@
 (ns app.core
-  (:require [clojure.data.json :as json]
-            [clojure.java.io :as io]
+  (:require [clojure.data.json :as json] 
             [ring.adapter.jetty :refer [run-jetty]]
             [ring.middleware.resource :refer [wrap-resource]]
             [compojure.core :refer [GET routes]]
-            [app.horoszkop :as h]
+            [app.horoszkop :as h] 
+            [app.statisztika :as stat]
             #_[ring.util.response :as response])
   (:gen-class :main true))
-
-(def statisztika-fajl
-  (io/resource "statistics.json"))
 
 (defn -main []
   (run-jetty
@@ -19,10 +16,17 @@
        (json/write-str h/csillagjegyek))
 
      (GET "/horoszkopok-generalasa/:csillagjegy" [csillagjegy]
-       (json/write-str (h/horoszkopok-generalasa csillagjegy))))
-     
+       (json/write-str (h/horoszkopok-generalasa csillagjegy)))
+
+     (GET "/statisztika-hozzaadasa/:valasztott/:tenyleges/:egyezo" [valasztott tenyleges egyezo]
+       (stat/statisztika-hozzaadasa
+        {:valasztott valasztott
+         :tenyleges tenyleges
+         :egyezo? (Boolean/parseBoolean egyezo)})
+       "statisztika sikeresen hozzáadva!"))
+
     "public")
-   
+
    {:port 3000
     :join? false}))
 

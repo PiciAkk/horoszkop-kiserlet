@@ -59,12 +59,33 @@
   "minden csillagjegy lecserelese egy megadott
    csillagjegyre egy szovegben"
   [erre szoveg]
-  (s/replace szoveg
-             (re-pattern
-              (str "("
-                   (s/join "|" (map s/capitalize csillagjegyek))
-                   ")"))
-             (s/capitalize erre)))
+  (let [csillagjegy-regex (->> csillagjegyek
+                               (map s/capitalize)
+                               (s/join "|")
+                               (re-pattern))]
+
+    (as-> szoveg $
+      (s/replace $ csillagjegy-regex (s/capitalize erre))
+      (s/split $ #" ")
+      (conj (mapv (fn [szo kovetkezo-szo]
+                    (if (and (#{"a" "az"} szo)
+                             (s/starts-with?
+                              kovetkezo-szo
+                              (s/capitalize erre)))
+                      (if ((set "bcdfghjklmnprstvz")
+                           (Character/toLowerCase
+                            (first kovetkezo-szo)))
+                        "a"
+                        "az")
+                      szo))
+                  $
+                  (rest $))
+            (last $))
+      (s/join " " $))))
+
+(comment
+  (csillagjegyek-lecserelese "mérleg" "Ma az Oroszlánnak idk.")
+  )
 
 (defn horoszkopok-generalasa
   "random horoszkopok generalasa random sorrendben,
