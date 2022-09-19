@@ -1,5 +1,3 @@
-const backendURL: string = "http://minecraft.veddvelem.hu:3000";
-
 interface Horoszkop {
     horoszkop: string;
     csillagjegy: string;
@@ -11,7 +9,7 @@ interface Horoszkopok {
 }
 
 (async () => {
-    const csillagjegyek: string[] = await (await fetch(`${backendURL}/csillagjegyek`)).json();
+    const csillagjegyek: string[] = await (await fetch("/csillagjegyek")).json();
 
     document.getElementById("csillagjegyek")!.innerHTML =
         csillagjegyek
@@ -24,7 +22,7 @@ interface Horoszkopok {
 
             const csillagjegy: string = (document.getElementById("csillagjegyek")! as HTMLInputElement).value;
             const horoszkopok: Horoszkopok =
-                (await (await fetch(`${backendURL}/horoszkopok-generalasa/${csillagjegy}`)).json());
+                (await (await fetch(`/horoszkopok-generalasa/${csillagjegy}`)).json());
 
             document
                 .getElementById("lehetoseg-hint")!
@@ -58,7 +56,7 @@ interface Horoszkopok {
                             .style
                             .background = "#90EE90";
 
-                        await fetch(`${backendURL}/statisztika-hozzaadasa/${horoszkop.csillagjegy}/${csillagjegy}/${horoszkopok.tenyleges == index}`);
+                        await fetch(`/statisztika-hozzaadasa/${horoszkop.csillagjegy}/${csillagjegy}/${horoszkopok.tenyleges == index}`);
                     }
 
                 document

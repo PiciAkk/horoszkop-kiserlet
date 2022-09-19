@@ -8,9 +8,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-const backendURL = "http://minecraft.veddvelem.hu:3000";
 (() => __awaiter(void 0, void 0, void 0, function* () {
-    const csillagjegyek = yield (yield fetch(`${backendURL}/csillagjegyek`)).json();
+    const csillagjegyek = yield (yield fetch("/csillagjegyek")).json();
     document.getElementById("csillagjegyek").innerHTML =
         csillagjegyek
             .map(csillagjegy => `<option value = '${csillagjegy}'>${csillagjegy}</option>`)
@@ -19,7 +18,7 @@ const backendURL = "http://minecraft.veddvelem.hu:3000";
         .onclick = () => __awaiter(void 0, void 0, void 0, function* () {
         document.body.style.cursor = "wait";
         const csillagjegy = document.getElementById("csillagjegyek").value;
-        const horoszkopok = (yield (yield fetch(`${backendURL}/horoszkopok-generalasa/${csillagjegy}`)).json());
+        const horoszkopok = (yield (yield fetch(`/horoszkopok-generalasa/${csillagjegy}`)).json());
         document
             .getElementById("lehetoseg-hint")
             .style
@@ -46,7 +45,7 @@ const backendURL = "http://minecraft.veddvelem.hu:3000";
                     .getElementById(`horoszkop${horoszkopok.tenyleges + 1}`)
                     .style
                     .background = "#90EE90";
-                yield fetch(`${backendURL}/statisztika-hozzaadasa/${horoszkop.csillagjegy}/${csillagjegy}/${horoszkopok.tenyleges == index}`);
+                yield fetch(`/statisztika-hozzaadasa/${horoszkop.csillagjegy}/${csillagjegy}/${horoszkopok.tenyleges == index}`);
             });
             document
                 .getElementById(`horoszkop${index + 1}`)
